@@ -1,6 +1,7 @@
 import os
 import sys
 import threading
+import time
 import tkinter as tk
 from tkinter import scrolledtext, filedialog
 import Mango, Console
@@ -16,19 +17,16 @@ listener = Hotkeys.Listener()
 def run():
     program.code = text.get('1.0', tk.END)
 
+    runtime = threading.Thread(target=Console.start, args=[program])
+    runtime.setDaemon(True)
+    runtime.start()
+
     program.run()
 
-    clearedMessages = []
+    while program.running:
+        time.sleep(.01)
 
-    for message in program.vars['__prints']:
-        while Fore.RED in message:
-            message = message.replace(Fore.RED, '')
-        clearedMessages.append(f'{message}\n')
-        if message[0:10] == '!EXCEPTION':
-            break
-
-    program.clear()
-    Console.main(clearedMessages)
+    runtime.running = False
 
 
 def delete():
@@ -145,7 +143,7 @@ buttonObjects = []
 topFrame = tk.Frame(window, width=1800, highlightbackground='black', highlightthickness=2)
 topFrame.pack(side='top')
 
-sidebar = tk.Frame(window, background='#3b3a3a', padx=10, pady=10,  height=300, highlightbackground='black', highlightthickness=2)
+sidebar = tk.Frame(window, background='#3b3a3a', padx=10, pady=10, height=300, highlightbackground='black', highlightthickness=2)
 sidebar.pack(side='left')
 
 filesScroll = tk.Scrollbar(sidebar)
@@ -187,4 +185,5 @@ while True:
     variables = program.vars
     variablesList.delete(0, tk.END)
     for var in variables:
-        variablesList.insert('end', f'{var} : {str(variables[var])}')
+        if var[0:2] != '__':
+            variablesList.insert('end', f'{var} : {str(variables[var])}')

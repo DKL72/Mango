@@ -21,6 +21,9 @@ class Script:
         self.running = False
         self.vars = {}
 
+        for var in Mngco_IO.read()[1]['@builtin']:
+            self.vars[var.split(' = ')[0]] = var.split(' = ')[1]
+
     def clear(self):
         self.messages = []
 
@@ -55,6 +58,7 @@ class Script:
                     self.assembled = f'{builtIn};\n{self.assembled}'
 
                 exec(self.assembled, globals(), self.vars)
+                self.vars['__prints'].append('*Finished')
             except Exception as e:
                 self.messages.append(Error_Handling.sort(e, self.code, self.name))
                 self.running = False
