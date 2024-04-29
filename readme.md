@@ -2,12 +2,12 @@
 Welcome to the Mango programming language! Mango is a custom language developed by Nektarios Lavdas with a focus on simplicity, readability, and performance. This README provides an overview of Mango, its features, and how to get started.
 
 ## Table of Contents
-- Features
-- Installation
-- Getting Started
-- Syntax and Examples
-- Community and Support
-- License
+- [Features](https://github.com/Nektarios1667/Mango?tab=readme-ov-file#features)
+- [Installation](https://github.com/Nektarios1667/Mango?tab=readme-ov-file#installation)
+- [Getting Started](https://github.com/Nektarios1667/Mango?tab=readme-ov-file#getting-started)
+- [Syntax and Examples](https://github.com/Nektarios1667/Mango?tab=readme-ov-file#syntax-and-examples)
+- [Community and Support](https://github.com/Nektarios1667/Mango?tab=readme-ov-file#community-and-support)
+- [License](https://github.com/Nektarios1667/Mango?tab=readme-ov-file#license)
 
 ## Features
 
