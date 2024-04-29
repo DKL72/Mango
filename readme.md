@@ -22,8 +22,10 @@ Mango offers several features that make it a unique and powerful language:
 To install Mango, follow these steps:
 
 1. Download the latest version of Mango from the official GitHub.
-2. Follow the installation instructions for your operating system.
-3. Once installed, you can access the Mango compiler and interpreter via the command line.
+2. Use the command prompt to naviagte to the Mango folder
+3. Run `pip install pyinstaller` to install the PyInstaller library.
+4. Run `pyinstaller --onefile --noconsole --icon=path\to\logo Editor.py` to create the executable.
+5. Open a .mng file using With Open and selecting Mango.exe and seclect always use.
 
 ## Getting Started
 To start coding in Mango:
