@@ -1,7 +1,7 @@
 import traceback
 from colorama import init, Fore
 from datetime import datetime
-import Mngco_IO
+import MngcoIO
 
 
 def error(error: str, line: str, location: tuple[int, int], name: str):

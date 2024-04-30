@@ -8,7 +8,7 @@ import Mango, Console
 from colorama import init, Fore
 import Hotkeys
 from Functions import *
-import Mngco_IO
+import MngcoIO
 
 program = Mango.Script()
 listener = Hotkeys.Listener()
@@ -17,16 +17,11 @@ listener = Hotkeys.Listener()
 def run():
     program.code = text.get('1.0', tk.END)
 
-    runtime = threading.Thread(target=Console.start, args=[program])
-    runtime.setDaemon(True)
+    runtime = threading.Thread(target=program.run)
     runtime.start()
 
-    program.run()
-
-    while program.running:
-        time.sleep(.01)
-
-    runtime.running = False
+    while runtime.is_alive():
+        Console.get(program)
 
 
 def delete():
@@ -118,7 +113,7 @@ def leave(event):
     event.widget.config(background='#B9B9B9')
 
 
-settingsList = subset('@editor', '@builtin', Mngco_IO.read()[0])
+settingsList = subset('@editor', '@builtin', MngcoIO.read()[0])
 settings = {}
 for s, setting in enumerate(settingsList[0]):
     settings[setting] = settingsList[1][s]
@@ -185,5 +180,5 @@ while True:
     variables = program.vars
     variablesList.delete(0, tk.END)
     for var in variables:
-        if var[0:2] != '__':
+        if var[0:2] != '!__':
             variablesList.insert('end', f'{var} : {str(variables[var])}')

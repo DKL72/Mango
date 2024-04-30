@@ -1,5 +1,7 @@
+import queue
+
 import Error_Handling
-import Mngco_IO
+import MngcoIO
 import StrCo
 import sys
 import threading
@@ -7,21 +9,22 @@ import traceback
 from colorama import Fore, init
 from cryptography.fernet import Fernet
 from datetime import datetime
-from Functions import *
 from io import StringIO
+
+from Functions import *
 
 
 class Script:
     def __init__(self, name: str = 'main'):
         self.name = name
         self.code = ""
-        self.dicts, self.lists = Mngco_IO.read()
+        self.dicts, self.lists = MngcoIO.read()
         self.assembled = ''
         self.messages = []
         self.running = False
         self.vars = {}
 
-        for var in Mngco_IO.read()[1]['@builtin']:
+        for var in MngcoIO.read()[1]['@builtin']:
             self.vars[var.split(' = ')[0]] = var.split(' = ')[1]
 
     def clear(self):
@@ -52,7 +55,7 @@ class Script:
                         self.assembled = self.assembled.replace(repl, replacements[1][r], 1)
 
             try:
-                builtIns = Mngco_IO.read()[1]['@builtin']
+                builtIns = MngcoIO.read()[1]['@builtin']
 
                 for builtIn in builtIns:
                     self.assembled = f'{builtIn};\n{self.assembled}'
