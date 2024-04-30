@@ -20,23 +20,20 @@ class Script:
         self.code = ""
         self.dicts, self.lists = MngcoIO.read()
         self.assembled = ''
-        self.messages = []
         self.running = False
         self.vars = {}
 
         for var in MngcoIO.read()[1]['@builtin']:
-            self.vars[var.split(' = ')[0]] = var.split(' = ')[1]
-
-    def clear(self):
-        self.messages = []
+            self.vars[var.split(' = ')[0]] = eval(var.split(' = ')[1])
 
     def error(self, error: str, line: str, location: tuple[int, int]):
-        message = f'{Fore.RED}!EXCEPTION [{datetime.now().strftime("%H:%M:%S")}] | Terminated Process - {self.name}\n\n{error} ERROR: "{line}" @ {location}\nSeverity: {self.dicts[error]}'
-        self.messages.append(message)
-        self.running = False
+        message = f'!EXCEPTION [{datetime.now().strftime("%H:%M:%S")}] | Terminated Process - {self.name}\n\n{error} ERROR: "{line}" @ {location}\nSeverity: {self.dicts[error]}'
+        self.vars['__prints'].append(message)
+        exit()
 
     def run(self, interpreter: str = 'alpha'):
         removed = self.lists['@removed']
+        self.vars['__prints'] = []
 
         if interpreter == 'alpha':
             for rem in removed:
@@ -63,5 +60,4 @@ class Script:
                 exec(self.assembled, globals(), self.vars)
                 self.vars['__prints'].append('*Finished')
             except Exception as e:
-                self.messages.append(Error_Handling.sort(e, self.code, self.name))
-                self.running = False
+                self.vars['__prints'].append(Error_Handling.sort(e, self.code, self.name))

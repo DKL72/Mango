@@ -1,14 +1,14 @@
 import os
 import sys
 import threading
-import time
 import tkinter as tk
 from tkinter import scrolledtext, filedialog
-import Mango, Console
-from colorama import init, Fore
+
+import Console
 import Hotkeys
-from Functions import *
+import Mango
 import MngcoIO
+from Functions import *
 
 program = Mango.Script()
 listener = Hotkeys.Listener()
@@ -22,6 +22,8 @@ def run():
 
     while runtime.is_alive():
         Console.get(program)
+
+    Console.get(program)
 
 
 def delete():

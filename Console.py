@@ -95,8 +95,8 @@ def get(program: Mango.Script):
     window.protocol("WM_DELETE_WINDOW", onClose)
 
     messages = program.vars['__prints']
-    if isinstance(messages, str):
-        messages = eval(messages)
+    # if isinstance(messages, str):
+    #     messages = eval(messages)
 
     if text is None:
         text = scrolledtext.ScrolledText(window, wrap=tk.WORD, width=140, height=47, background='lightgrey')
@@ -110,12 +110,15 @@ def get(program: Mango.Script):
         message = str(message)
 
         text.insert(tk.END, message + '\n', 'Error' if message.strip()[0:10] == '!EXCEPTION' else ('Info' if message.strip()[0] == '*' else 'Message'))
+        text.see('end')
 
         text.tag_config('Error', foreground='darkred')
         text.tag_config('Info', foreground='green')
 
-        if message == '*Finished':
+        if message == '*Finished' or message.strip()[0:10] == '!EXCEPTION':
             break
+
+        print(message.strip()[0:10])
 
     text.config(state='disabled')
 
