@@ -61,9 +61,8 @@ class Script:
 
                 exec(self.assembled, globals(), self.vars)
 
-                for e, error in enumerate(self.errors):
-                    self.vars['__prints'].insert(e, error)
-                    print(self.vars['__prints'])
+                self.vars['__prints'].extend(self.errors)
+
                 self.vars['__prints'].append('*Finished')
             except Exception as e:
                 self.errors.append(Error_Handling.sort(e, self.code, self.name))
