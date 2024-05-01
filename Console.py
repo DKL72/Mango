@@ -95,6 +95,7 @@ def get(program: Mango.Script):
     window.protocol("WM_DELETE_WINDOW", onClose)
 
     messages = program.vars['__prints']
+    print(program.vars)
     # if isinstance(messages, str):
     #     messages = eval(messages)
 
@@ -118,7 +119,6 @@ def get(program: Mango.Script):
         if message == '*Finished' or message.strip()[0:10] == '!EXCEPTION':
             break
 
-        print(message.strip()[0:10])
 
     text.config(state='disabled')
 

@@ -21,6 +21,7 @@ class Script:
         self.dicts, self.lists = MngcoIO.read()
         self.assembled = ''
         self.running = False
+        self.errors = []
         self.vars = {}
 
         for var in MngcoIO.read()[1]['@builtin']:
@@ -28,8 +29,9 @@ class Script:
 
     def error(self, error: str, line: str, location: tuple[int, int]):
         message = f'!EXCEPTION [{datetime.now().strftime("%H:%M:%S")}] | Terminated Process - {self.name}\n\n{error} ERROR: "{line}" @ {location}\nSeverity: {self.dicts[error]}'
-        self.vars['__prints'].append(message)
-        exit()
+        self.errors.append(message)
+        if self.dicts[error] == 'FULL-ERROR':
+            quit()
 
     def run(self, interpreter: str = 'alpha'):
         removed = self.lists['@removed']
@@ -58,6 +60,10 @@ class Script:
                     self.assembled = f'{builtIn};\n{self.assembled}'
 
                 exec(self.assembled, globals(), self.vars)
+
+                for e, error in enumerate(self.errors):
+                    self.vars['__prints'].insert(e, error)
+                    print(self.vars['__prints'])
                 self.vars['__prints'].append('*Finished')
             except Exception as e:
-                self.vars['__prints'].append(Error_Handling.sort(e, self.code, self.name))
+                self.errors.append(Error_Handling.sort(e, self.code, self.name))
