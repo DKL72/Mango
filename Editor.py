@@ -3,6 +3,7 @@ import sys
 import threading
 import tkinter as tk
 from tkinter import scrolledtext, filedialog
+from types import *
 
 import Console
 import Hotkeys
@@ -182,5 +183,5 @@ while True:
     variables = program.vars
     variablesList.delete(0, tk.END)
     for var in variables:
-        if var[0:2] != '!__':
+        if var[0:2] != '__' and type(variables[var]) in [str, int, float, list, tuple, bool, bytes, complex, dict, complex, map]:
             variablesList.insert('end', f'{var} : {str(variables[var])}')
