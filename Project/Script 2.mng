@@ -1,1 +1,2 @@
-Script 2
+output('Hello');
+output(__assembled);

@@ -1,4 +1,4 @@
-import Error_Handling
+import ErrorHandling
 from colorama import init, Fore
 
 

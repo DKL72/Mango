@@ -22,9 +22,13 @@ def run():
     runtime.start()
 
     while runtime.is_alive():
-        Console.get(program)
+        cycle = str(Console.get(program))
+        if cycle not in [None, 'None', '']:
+            program.vars['__inputs'].append(cycle)
 
-    Console.get(program)
+    cycle = Console.get(program)
+    if cycle not in [None, 'None', '']:
+        program.vars['__inputs'].append(cycle)
 
 
 def delete():
@@ -127,10 +131,11 @@ window.iconbitmap('C:\\Users\\nekta\\OneDrive\\Pictures\\Saved Pictures\\mngImag
 window.title('Mango Editor: ' + path.split("\\")[-1])
 
 window.geometry('1800x900')
-buttons = ['Open', 'Save', 'Save As...', 'Run', 'New', 'Config', 'Delete', 'Quit']
-bFunctions = [openMng, save, saveAs, run, new, config, delete, window.destroy]
+buttons = ['Open', 'Save', 'Save As...', 'Run', 'Reload', 'New', 'Config', 'Delete', 'Quit']
+# Create refresh button and put function program.refresh and remove some blank spaces
+bFunctions = [openMng, save, saveAs, run, program.refresh, new, config, delete, window.destroy]
 
-for i in range(27):
+for i in range(53):
     buttons.append('')
     bFunctions.append('')
 
@@ -165,7 +170,7 @@ for b, button in enumerate(buttons):
         buttonObjects[b].bind('<Enter>', enter)
         buttonObjects[b].bind('<Leave>', leave)
     else:
-        buttonObjects.append(tk.Button(topFrame, command=bFunctions[b], text=button, width=5, state='disabled', font=('Arial', 10), background='#B9B9B9', borderwidth=0))
+        buttonObjects.append(tk.Button(topFrame, command=bFunctions[b], text=button, width=2, state='disabled', font=('Arial', 10), background='#B9B9B9', borderwidth=0))
 
     buttonObjects[b].pack(side='right')
 
@@ -182,6 +187,7 @@ while True:
 
     variables = program.vars
     variablesList.delete(0, tk.END)
+
     for var in variables:
-        if var[0:2] != '__' and type(variables[var]) in [str, int, float, list, tuple, bool, bytes, complex, dict, complex, map]:
+        if var[0:2] != '_!' and type(variables[var]) in [str, int, float, list, tuple, bool, bytes, complex, dict, complex, map]:
             variablesList.insert('end', f'{var} : {str(variables[var])}')

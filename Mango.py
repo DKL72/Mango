@@ -1,6 +1,5 @@
 import queue
-
-import Error_Handling
+import ErrorHandling
 import MngcoIO
 import StrCo
 import sys
@@ -27,6 +26,16 @@ class Script:
         for var in MngcoIO.read()[1]['@builtin']:
             self.vars[var.split(' = ')[0]] = eval(var.split(' = ')[1])
 
+    def refresh(self):
+        self.dicts, self.lists = MngcoIO.read()
+        self.assembled = ''
+        self.running = False
+        self.errors = []
+        self.vars = {}
+
+        for var in MngcoIO.read()[1]['@builtin']:
+            self.vars[var.split(' = ')[0]] = eval(var.split(' = ')[1])
+
     def error(self, error: str, line: str, location: tuple[int, int]):
         message = f'!EXCEPTION [{datetime.now().strftime("%H:%M:%S")}] | Terminated Process - {self.name}\n\n{error} ERROR: "{line}" @ {location}\nSeverity: {self.dicts[error]}'
         self.errors.append(message)
@@ -36,6 +45,8 @@ class Script:
     def run(self, interpreter: str = 'alpha'):
         removed = self.lists['@removed']
         self.vars['__prints'] = []
+        self.vars['__inputs'] = []
+        self.vars['__assembled'] = ''
 
         if interpreter == 'alpha':
             for rem in removed:
@@ -50,19 +61,20 @@ class Script:
             self.assembled = self.code
             for r, repl in enumerate(replacements[0]):
                 while repl in self.assembled and StrCo.isValid(self.assembled.find(repl), self.assembled):
-                    if StrCo.isValid(self.assembled.find(repl), self.assembled):
-                        self.assembled = self.assembled.replace(repl, replacements[1][r], 1)
+                    self.assembled = self.assembled.replace(repl, replacements[1][r], 1)
 
-            try:
-                builtIns = MngcoIO.read()[1]['@builtin']
+            builtIns = MngcoIO.read()[1]['@builtin']
 
-                for builtIn in builtIns:
+            for builtIn in builtIns:
+                if builtIn.split(' = ')[0] != '__assembled':
                     self.assembled = f'{builtIn};\n{self.assembled}'
 
+            self.vars['__assembled'] = self.assembled
+
+            try:
                 exec(self.assembled, globals(), self.vars)
 
                 self.vars['__prints'].extend(self.errors)
-
                 self.vars['__prints'].append('*Finished')
             except Exception as e:
-                self.errors.append(Error_Handling.sort(e, self.code, self.name))
+                self.errors.append(ErrorHandling.sort(e, self.code, self.name))
