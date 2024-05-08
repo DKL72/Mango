@@ -1,6 +1,7 @@
 import os
 import sys
 import threading
+import time
 import tkinter as tk
 from tkinter import scrolledtext, filedialog
 from types import *
@@ -15,7 +16,16 @@ program = Mango.Script()
 listener = Hotkeys.Listener()
 
 
+def refresh():
+    global splits, old
+    program.refresh()
+    old = ''
+    splits = MngcoIO.read2()[1]['@splits']
+
+
 def run():
+    refresh()
+
     program.code = text.get('1.0', tk.END)
 
     runtime = threading.Thread(target=program.run)
@@ -98,6 +108,7 @@ def selectFile(*args):
 
     text.delete('1.0', tk.END)
     text.insert(tk.END, data)
+    refresh()
     window.title('Mango Editor: ' + files.get(files.curselection()[0]))
 
 
@@ -133,7 +144,7 @@ window.title('Mango Editor: ' + path.split("\\")[-1])
 window.geometry('1800x900')
 buttons = ['Open', 'Save', 'Save As...', 'Run', 'Reload', 'New', 'Config', 'Delete', 'Quit']
 # Create refresh button and put function program.refresh and remove some blank spaces
-bFunctions = [openMng, save, saveAs, run, program.refresh, new, config, delete, window.destroy]
+bFunctions = [openMng, save, saveAs, run, refresh, new, config, delete, window.destroy]
 
 for i in range(53):
     buttons.append('')
@@ -179,6 +190,10 @@ text.pack(side='left', padx=20)
 text.insert(tk.END, contents)
 
 variables = {}
+old = ''
+
+splits = MngcoIO.read2()[1]['@splits']
+
 while True:
     window.update()
     for action in listener.actions:
@@ -189,5 +204,39 @@ while True:
     variablesList.delete(0, tk.END)
 
     for var in variables:
-        if var[0:2] != '_!' and type(variables[var]) in [str, int, float, list, tuple, bool, bytes, complex, dict, complex, map]:
+        if var[0:2] != '!_' and type(variables[var]) in [str, int, float, list, tuple, bool, bytes, complex, dict, complex, map]:
             variablesList.insert('end', f'{var} : {str(variables[var])}')
+
+    code = text.get('1.0', tk.END)
+
+    highlights = {}
+
+    if code != old:
+        for tag in text.tag_names():
+            text.tag_delete(tag)
+
+        for l, line in enumerate(code.split('\n')):
+            if len(line) > 0 and line[0] == '#':
+                text.tag_config('comment', foreground='#a4cc9b')
+                text.tag_add('comment', f'{l + 1}.0', f'{l + 1}.{line.find(";")}')
+
+            for word in MngcoIO.read2()[0]['@highlighting']:
+                start = 0
+
+                while word in line[start:]:
+                    location = line[start:].find(word)
+
+                    text.tag_config(word, foreground=MngcoIO.read2()[0]['@highlighting'][word])
+
+                    try:
+                        valid = (line[location + start - 1] in splits or location + start == 0,
+                                 line[location + start + len(word)] in splits or location + start + len(word) == 0)
+                    except IndexError:
+                        valid = [False, False]
+
+                    if location != -1 and valid[0] and valid[1]:
+                        text.tag_add(word, f'{l + 1}.{location + start}', f'{l + 1}.{location + start + len(word)}')
+
+                    start = start + len(word)
+
+    old = text.get('1.0', tk.END)

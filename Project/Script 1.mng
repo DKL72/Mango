@@ -1,1 +1,9 @@
-output('hello');
+import time;
+
+func add(val, add):
+	return val + add;
+
+time.sleep(3);
+
+# Return assembled code;
+output(__assembled);
