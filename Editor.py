@@ -201,7 +201,10 @@ while True:
     listener.actions = []
 
     variables = program.vars
-    variablesList.delete(0, tk.END)
+    try:
+        variablesList.delete(0, tk.END)
+    except:
+        quit()
 
     for var in variables:
         if var[0:2] != '__' and type(variables[var]) in [str, int, float, list, tuple, bool, bytes, complex, dict, complex, map]:
