@@ -35,4 +35,3 @@ def isValid(index: int, code: str):
             return False
 
     return True
-
