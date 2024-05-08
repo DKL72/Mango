@@ -2,9 +2,7 @@ import os
 import sys
 import time
 import tkinter as tk
-
 import keyboard
-
 import Mango
 from tkinter import scrolledtext, filedialog
 from colorama import init, Fore
@@ -54,7 +52,6 @@ def get(program: Mango.Script):
 
     for message in messages:
         message = str(message)
-        print(message)
 
         text.insert(tk.END, message + ('\n' if message != '>>' else ''), 'Error' if message.strip()[0:10] == '!EXCEPTION' else ('Info' if message.strip()[0] == '*' else 'Message'))
         text.see('end')

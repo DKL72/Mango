@@ -58,9 +58,11 @@ class Script:
                 self.assembled = f'{var} = {self.vars[var]};\n{self.assembled}'
 
             try:
+                startTime = datetime.now()
+
                 exec(self.assembled, globals(), self.vars)
 
-                self.vars['__prints'].append('*Finished')
-
+                self.vars['__prints'].insert(0, f'*Started @ {startTime}')
+                self.vars['__prints'].append(f'\n*Finished @ {datetime.now()}')
             except Exception as e:
                 self.vars['__prints'].append(ErrorHandling.sort(e, self.code, self.name))
