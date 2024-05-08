@@ -5,7 +5,6 @@ import time
 import tkinter as tk
 from tkinter import scrolledtext, filedialog
 from types import *
-
 import Console
 import Hotkeys
 import Mango
@@ -204,7 +203,7 @@ while True:
     try:
         variablesList.delete(0, tk.END)
     except:
-        quit()
+        sys.exit()
 
     for var in variables:
         if var[0:2] != '__' and type(variables[var]) in [str, int, float, list, tuple, bool, bytes, complex, dict, complex, map]:
