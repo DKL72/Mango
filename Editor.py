@@ -204,7 +204,7 @@ while True:
     variablesList.delete(0, tk.END)
 
     for var in variables:
-        if var[0:2] != '!_' and type(variables[var]) in [str, int, float, list, tuple, bool, bytes, complex, dict, complex, map]:
+        if var[0:2] != '__' and type(variables[var]) in [str, int, float, list, tuple, bool, bytes, complex, dict, complex, map]:
             variablesList.insert('end', f'{var} : {str(variables[var])}')
 
     code = text.get('1.0', tk.END)
